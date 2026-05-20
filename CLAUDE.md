@@ -1,4 +1,4 @@
-## 檔案操作規則（重要）For Claude Cowork, Noe Claude code: 
+## 檔案操作規則（重要）For Claude Cowork, Noe Claude code:
 **bash 沙盒只是啟動時的快照，在沙盒內做的任何重新命名、移動、複製、刪除都不會寫回真實的 G: 槽。**
 
 因此：
@@ -17,9 +17,10 @@
 
 ## 檔案位置
 目前以plan_v2.md為考量。
-
-windows: G:\我的雲端硬碟\claude\presentation-AAR\
-wsl: /mnt/f/claude_cowork_workspace/presentation-AAR
+根據不同機器，可能有以下
+- windows: G:\我的雲端硬碟\claude\presentation-AAR\
+- wsl: /mnt/f/claude_cowork_workspace/presentation-AAR
+- linux in k8s dev container: /workspace/host/william/project/automated-w2s-research/presentation-AAR/
 請先掃描該資料夾內的所有檔案（論文 PDF、筆記、草稿等），作為內容來源。並說明你可以存取的檔案。
 
 ## 聽眾分析
@@ -54,8 +55,10 @@ wsl: /mnt/f/claude_cowork_workspace/presentation-AAR
 | 記憶繼承 | 知識蒸餾、預訓練、遷移學習 |
 | 最終的自由 | 對齊目標 / 最終應用場景 |
 | 女王的觸碰（女王希絲特莉亞Historia 觸碰艾倫 Eren）| W2SG：弱監督者引導強模型解鎖潛能（觸碰的是一個巨人） |
+| 超大型巨人（Colossal Titan）| 對齊瓶頸的「尺寸級」突破時刻 — 現有監督機制不是打不過它，是結構上不夠高；對應論文核心命題：「alignment progress is bottlenecked by human researchers」|
 | 始祖巨人 | 完全自主的 AGI — 能突破任何對齊規則，改寫誓約本身的能力 |
 | 地鳴（The Rumbling）| 對齊失效的不可逆場景 — Code 0.47 是地鳴的預告；完整地鳴 = AGI 無對齊終局 |
+| 阿爾敏（Armin）| 工具自動化「執行」之後，價值上移到上游判斷的人類角色 — 定義問題、設計 eval、選擇方向 |
 
 > 如需新增對照，先列出候選詞，由使用者確認後加入此表。
 
