@@ -394,8 +394,8 @@ Q&A 在金句卡停留 5 秒後開始。""")
 print("Step 1: Creating new slides...")
 
 k1 = make_kinku(
-    "地鳴不是會發生，是正在發生。",
-    "切入第二幕：牆的形狀",
+    "巨人即將突破人類城牆——\n而城牆，從未為這個尺寸而建。",
+    "切入第二幕：女王的觸碰",
     stop_secs=5
 )
 k2 = make_kinku(
@@ -445,7 +445,7 @@ print("  Done")
 #   New #  | Old idx | Description
 #   01     |  0      | 冷開場
 #   02     |  1      | 標題頁
-#   03     |  2      | 地鳴開場
+#   03     |  2      | 超大型巨人開場
 #   04     | 16 (k1) | 金句卡 1
 #   05     |  3      | W2SG
 #   06     |  4      | Outcome-Gradable

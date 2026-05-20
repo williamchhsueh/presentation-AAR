@@ -9,19 +9,57 @@
 ---
 
 ## 任務目標
-協助準備一場部門內部 AI 論文分享簡報，採用晉級的巨人情節類比。論文來源：https://alignment.anthropic.com/2026/automated-w2s-researcher/
-已經提取文字檔 論文.md
+協助準備一場部門內部 AI 論文分享簡報，採用進擊的巨人情節類比。論文來源：https://alignment.anthropic.com/2026/automated-w2s-researcher/
+論文全文已提取至 `paper/論文.md`（另有標注版 `paper/論文_highlighted.md`）。
 
 ## 時間預算
-約在30分鐘，20頁左右
+約在30分鐘，21頁（五幕劇本）
 
 ## 檔案位置
-目前以plan_v2.md為考量。
-根據不同機器，可能有以下
+根據不同機器，可能有以下路徑：
 - windows: G:\我的雲端硬碟\claude\presentation-AAR\
 - wsl: /mnt/f/claude_cowork_workspace/presentation-AAR
 - linux in k8s dev container: /workspace/host/william/project/automated-w2s-research/presentation-AAR/
-請先掃描該資料夾內的所有檔案（論文 PDF、筆記、草稿等），作為內容來源。並說明你可以存取的檔案。
+
+### 現行目錄結構
+
+```
+presentation-AAR/
+├── CLAUDE.md               # 本檔（專案說明 + 巨人對照表）
+├── PLAN_v2.md              # 敘事 / 內容 / 節奏 的權威（21 張、五幕劇本）
+├── vis_style.md            # 視覺 / 版型 / 色彩 / 動畫 的權威
+├── archive/                # 舊版草稿（ANALYSIS.md, PLAN.md, plan_review.md, prompt*.md）
+├── code/
+│   └── create_v2_1.py      # python-pptx 生成腳本
+├── figure/                 # 論文原圖（paper_fig01–fig10）
+│   ├── paper_fig01_PGR_vs_hillclimbing_hours.png
+│   ├── paper_fig02_PGR_schematic.png
+│   ├── paper_fig03_human_baselines.png
+│   ├── paper_fig04_AAR_setup_overview.png
+│   ├── paper_fig05_PGR_seeded_directions.png
+│   ├── paper_fig06_swarm_orbit_animation.gif
+│   ├── paper_fig07_category_entropy.png
+│   ├── paper_fig08_code_complexity.png
+│   ├── paper_fig09_AAR_ideas_transfer.png
+│   └── paper_fig10_scaffolding_schematic.png
+├── paper/
+│   ├── 論文.md
+│   └── 論文_highlighted.md
+└── ppt/
+    ├── AAR_Paper_Sharing.pptx       # 當前主稿（21 張，10"×5.625"）
+    ├── AAR_Paper_Sharing_v1.pptx    # 舊版
+    ├── AAR_Paper_Sharing_v2.pptx    # 舊版
+    ├── AAR_Paper_Sharing_v2_rev.pptx
+    ├── Superalignment_Dossier.pdf   # 視覺風格參照（dossier 風格原稿）
+    └── The_Automated_Researcher.pptx
+```
+
+### 兩份設計文件的分工
+| 文件 | 職責 |
+|---|---|
+| `PLAN_v2.md` | 敘事內容、每幕節奏、三層內容系統、speaker notes 邏輯 |
+| `vis_style.md` | 版型 (Layout)、色彩 token、元件、動畫、python-pptx helper 對應 |
+兩檔衝突時：內容 → PLAN_v2 為準；形式 → vis_style.md 為準。
 
 ## 聽眾分析
 - Data Scientists × 15（熟悉 ML 概念，可接受技術細節）

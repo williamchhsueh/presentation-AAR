@@ -186,7 +186,7 @@
 - 直徑 8 pt 的圓點
 - 右側貼 8 pt label：`t-body-sm` ALL CAPS letter-spacing 0.08em
 - 三色組合：`accent-good` / `accent-bad` / `accent-warn`
-- 用於「狀態列」場景：地鳴頁、Threat/Solution 對比、儀表板
+- 用於「狀態列」場景：超大型巨人頁、Threat/Solution 對比、儀表板
 
 ### 6.4 `c-dossier-frame`（諜報檔案邊框）
 
@@ -214,7 +214,7 @@
   `Automated Alignment Researcher (AAR) · Anthropic Research 2026`
 - 右下小字（`t-caption`, `text-muted`）：頁碼 `04 / 21`
 - 金句卡（Slide 04/08/12/16/21）與 Slide 01（冷開場）**不顯示頁碼**
-- Slide 03（地鳴）只顯示左下版權，不顯示頁碼
+- Slide 03（超大型巨人）只顯示左下版權，不顯示頁碼
 
 ### 6.6 `c-hero-mask`（影像遮罩）
 
@@ -261,7 +261,7 @@ PGR
 └─────────────────────────────────────────┘
 ```
 
-- 用途：冷開場、地鳴、第一翻勝利、結語
+- 用途：冷開場、超大型巨人、第一翻勝利、結語
 - Zone：full-bleed image + `c-hero-mask` + 1~2 張 `c-card` 或 1 個 `c-mega-number`
 - 標題位置：垂直 30–35% 偏上、水平置中
 - 背景影像：AoT 系列（§10 規則）
@@ -463,7 +463,7 @@ PGR
 
 ---
 
-### 幕一：危機降臨（01–04）
+### 幕一：超大型巨人（01–04）
 
 #### Slide 01｜冷開場「7 天 vs 5 天」
 
@@ -494,11 +494,11 @@ PGR
   | h1 | x 4 / y 8 / w 92 / h 14 | `AAR：自動化的對齊研究者。` |
   | subtitle | x 4 / y 22 / w 92 / h 6 | mono：`A 30-minute briefing in 5 acts` |
   | acts-row | x 4 / y 35 / w 92 / h 40 | 5 張 `c-card`，間隔 1.5% |
-- **Text**：5 張 act 卡：「I. 危機降臨」/「II. 牆的形狀」/「III. 兵團展開」/「IV. 艾連覺醒」/「V. 阿爾敏的價值」
+- **Text**：5 張 act 卡：「I. 超大型巨人」/「II. 女王的觸碰」/「III. 兵團展開」/「IV. 艾連覺醒」/「V. 阿爾敏的價值」
 - **Accent tokens**：當前所在幕的卡頂條 = `accent-good`；其餘 = `stroke`
 - **Image assets**：每張 act 卡角落放一階段的 wall 縮圖當分隔符（小 24×32 px）
 
-#### Slide 03｜地鳴開場
+#### Slide 03｜超大型巨人開場
 
 - **Layout**：`L-HERO`
 - **Background**：AoT **超大型巨人（Colossal Titan）** 半身入鏡（呼應 CLAUDE.md 對照：超大型巨人 = `bottlenecked by human researchers`，「不是打不過，是結構上不夠高」）→ `c-hero-mask` 60%
@@ -512,7 +512,7 @@ PGR
   | status-row | x 8 / y 72 / w 84 / h 8 | 3 個 `c-status-dot` 橫排 |
 - **Text status-row**：`● PACE`（綠）`Model capabilities advance daily.` ｜ `● BANDWIDTH`（紅）`Human alignment research takes months.` ｜ `● THE GAP`（琥珀）`Far more directions than humans to test them.`
 - **Accent tokens**：`accent-good` / `accent-bad` / `accent-warn`
-- **Image assets**：The Rumbling 始祖巨人
+- **Image assets**：超大型巨人（Colossal Titan）半身——即 Background hero 圖
 
 #### Slide 04｜金句卡 1
 
@@ -521,12 +521,12 @@ PGR
 - **Wall stage**：—
 - **Footer**：**無**
 - **Zones**：quote-center, x 12 / y 38 / w 76 / h 24
-- **Text**：「地鳴不是會發生，是正在發生。」（`t-quote`, `text-primary`）
+- **Text**：「巨人即將突破人類城牆——而城牆，從未為這個尺寸而建。」（`t-quote`, `text-primary`）
 - **Accent tokens**：—
 
 ---
 
-### 幕二：牆的形狀（05–08）
+### 幕二：女王的觸碰（05–08）
 
 #### Slide 05｜W2SG（合併）
 
