@@ -801,7 +801,7 @@ PGR
 #### Slide 20｜結語
 
 - **Layout**：`L-HERO`
-- **Background**：AoT 阿爾敏指揮 / 演說姿勢 → `c-hero-mask` 60%
+- **Background**：`assets/aot_asset_01_armin_airship_night.png`（飛行船船頭阿爾敏背影） → `c-hero-mask` **45–50%**（圖本身為深色夜景，遮罩降低保留船艙與引擎細節）
 - **Wall stage**：16（只剩底線；右側額外淡淡勾出「更高的新牆」輪廓線 — `stroke-hud` 30% 不透明、虛線 2pt-2pt）
 - **Footer**：左下版權，**無頁碼**
 - **Zones**：
@@ -811,7 +811,7 @@ PGR
   | subtitle | x 8 / y 56 / w 84 / h 18 | 「五天前我們會說研究的瓶頸是研究者不夠。今天這篇論文告訴我們：提出想法、跑實驗，已經能用 $22／AAR-hour 買到。瓶頸沒消失——它搬到了上游：誰能定義『什麼算解對了』。這件事，現在還沒有人能外包。」 |
   | qa-hint | x 8 / y 86 / w 84 / h 6 | 「Q&A — 你想問什麼？」（金句卡 5 停留結束後 fade-in） |
 - **Accent tokens**：`$22／AAR-hour` 套 `accent-good`；`還沒有人能外包` 套 `accent-good-glow`
-- **Image assets**：AoT 阿爾敏
+- **Image assets**：`assets/aot_asset_01_armin_airship_night.png`（全頁 hero，mask 45–50%）
 
 #### Slide 21｜金句卡 5
 
@@ -854,7 +854,7 @@ PGR
 
 | AoT 元素 | Slides | 用法 |
 |---|---|---|
-| 超大型巨人（Colossal Titan）半身 | 03 | 全頁 hero 背景；對應「bottlenecked by human researchers」 |
+| 超大型巨人（Colossal Titan）半身（`aot_asset_02_colossal_titan_attack.png`） | 03 | 全頁 hero 背景；對應「bottlenecked by human researchers」 |
 | The Rumbling / 始祖巨人骨架 | （備用） | Slide 01 PLAN_v2 規定不放圖；Rumbling 元素保留給 Slide 14「啟動地鳴瞬間」場景 |
 | 女王的觸碰（Historia + Eren） | 05 | col-L 卡內嵌圖 |
 | 調查兵團集體衝鋒 | 09 | 右下角角落剪影（可選） |
@@ -863,8 +863,8 @@ PGR
 | 艾倫普通 vs 始祖巨人 | 13 | 角落小圖（可選） |
 | 艾倫啟動地鳴瞬間 | 14 | 右下角剪影 |
 | 漢吉拿報告困惑 | 15 | 右下角剪影 |
-| 阿爾敏沉思 + 立體機動命中後頸 | 17 | col-R 角落剪影 |
-| 阿爾敏指揮 / 演說 | 20 | 全頁 hero 背景 |
+| 阿爾敏沉思 + 立體機動命中後頸 | ~~17~~ | 已移除（Slide 17 改為純資料頁，L-DOSSIER + fig10） |
+| 飛行船船頭阿爾敏背影（`aot_asset_01_armin_airship_night.png`） | 20 | 全頁 hero 背景，`c-hero-mask` 45–50% |
 
 ---
 
