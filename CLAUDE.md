@@ -4,6 +4,7 @@
 因此：
 - **讀取、寫入、編輯、列出**真實檔案 → 一律使用 `Read` / `Write` / `Edit` / `Glob` 工具，搭配真實 Windows 路徑（如 `G:\我的雲端硬碟\...`）
 - **執行程式、安裝套件、跑計算** → 可使用 bash，但輸出若需要落地，仍需用 `Write` 工具寫入真實路徑
+- **安裝 Python 套件** → 使用 `poetry add <package>` 而非 `pip install`
 - **絕對不要**用 bash 的 `mv` / `cp` / `rm` 來操作 G: 槽的使用者檔案
 
 ---
@@ -28,29 +29,43 @@ presentation-AAR/
 ├── CLAUDE.md               # 本檔（專案說明 + 巨人對照表）
 ├── PLAN_v2.md              # 敘事 / 內容 / 節奏 的權威（21 張、五幕劇本）
 ├── vis_style.md            # 視覺 / 版型 / 色彩 / 動畫 的權威
+├── AoT_wiki.md             # 進擊的巨人角色 / 情節速查
+├── figure_report.md        # 各論文圖的說明與使用建議
+├── pyproject.toml          # Poetry 專案設定
+├── poetry.lock
 ├── archive/                # 舊版草稿（ANALYSIS.md, PLAN.md, plan_review.md, prompt*.md）
+├── assets/                 # AI 生成的情境插圖（AoT 風格）
+│   ├── aot_asset_01_armin_airship_night.png
+│   └── aot_asset_02_colossal_titan_attack.png
 ├── code/
-│   └── create_v2_1.py      # python-pptx 生成腳本
+│   ├── build_deck.py       # 主建構腳本（當前使用）
+│   ├── create_v2_1.py      # 舊版 python-pptx 生成腳本
+│   ├── figure_tools.py     # 圖片處理工具函式
+│   ├── render_slides.py    # 投影片預覽 / 匯出工具
+│   └── image_formats.md    # 圖片格式選用說明
 ├── figure/                 # 論文原圖（paper_fig01–fig10）
-│   ├── paper_fig01_PGR_vs_hillclimbing_hours.png
-│   ├── paper_fig02_PGR_schematic.png
-│   ├── paper_fig03_human_baselines.png
-│   ├── paper_fig04_AAR_setup_overview.png
-│   ├── paper_fig05_PGR_seeded_directions.png
-│   ├── paper_fig06_swarm_orbit_animation.gif
-│   ├── paper_fig07_category_entropy.png
-│   ├── paper_fig08_code_complexity.png
-│   ├── paper_fig09_AAR_ideas_transfer.png
-│   └── paper_fig10_scaffolding_schematic.png
+│   │                       # 每張圖有三種格式：
+│   │                       #   .png（原始）、_dark.png（深色背景版）、.svg（向量）
+│   ├── paper_fig01_PGR_vs_hillclimbing_hours.{png,svg,_dark.png}
+│   ├── paper_fig02_PGR_schematic.{png,svg,_dark.png}
+│   ├── paper_fig03_human_baselines.{png,svg,_dark.png}
+│   ├── paper_fig04_AAR_setup_overview.{png,svg,_dark.png}
+│   ├── paper_fig05_PGR_seeded_directions.{png,svg,_dark.png}
+│   ├── paper_fig06_swarm_orbit_animation.gif   # 動畫（無 SVG/dark 版）
+│   ├── paper_fig07_category_entropy.{png,svg,_dark.png}
+│   ├── paper_fig08_code_complexity.{png,svg,_dark.png}
+│   ├── paper_fig09_AAR_ideas_transfer.{png,svg,_dark.png}
+│   └── paper_fig10_scaffolding_schematic.{png,svg,_dark.png}
 ├── paper/
 │   ├── 論文.md
 │   └── 論文_highlighted.md
 └── ppt/
-    ├── AAR_Paper_Sharing.pptx       # 當前主稿（21 張，10"×5.625"）
-    ├── AAR_Paper_Sharing_v1.pptx    # 舊版
+    ├── AAR_Paper_Sharing_v4.pptx    # 當前主稿（21 張，10"×5.625"）
+    ├── AAR_Paper_Sharing_v2.1.pptx  # 舊版
     ├── AAR_Paper_Sharing_v2.pptx    # 舊版
-    ├── AAR_Paper_Sharing_v2_rev.pptx
+    ├── AAR_Paper_Sharing_v1.pptx    # 舊版
     ├── Superalignment_Dossier.pdf   # 視覺風格參照（dossier 風格原稿）
+    ├── Superalignment_Dossier.pptx  # 同上（可編輯版）
     └── The_Automated_Researcher.pptx
 ```
 
@@ -103,10 +118,10 @@ presentation-AAR/
 ---
 
 ## 創意生成原則
-每次構思簡報段落、標題、或視覺概念時，**先提出 3 個風格不同的版本**，再由使用者選擇或合併：
-- 版本 A：戲劇張力優先（強調衝突、危機感）
-- 版本 B：技術精準優先（正確對應論文 contribution）
-- 版本 C：PM 直覺優先（用商業/產品語言轉譯）
+構思簡報段落、標題、或視覺概念時，**預設給出最佳單一版本**，並在最後附上一行：
+> 想要其他風格？ A 戲劇張力 / B 技術精準 / C PM 直覺 — 說出字母即展開。
+
+只有在使用者主動說「給我選項」、「多版本」、「options」，或指定字母時，才展開對應版本。
 
 ---
 
