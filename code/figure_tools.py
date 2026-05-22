@@ -23,6 +23,7 @@ import sys
 import tempfile
 from pathlib import Path
 
+import numpy as np
 from PIL import Image, ImageChops
 
 
@@ -110,6 +111,74 @@ def make_transparent(
         out = str(out) + ".png"
     img.save(out)
     print(f"Saved with transparent bg → {out}")
+
+
+# ---------------------------------------------------------------------------
+# Animated GIF dark background
+# ---------------------------------------------------------------------------
+
+def darken_gif(
+    src: str | Path,
+    out: str | Path,
+    bg_color: tuple[int, int, int] = (8, 16, 16),
+    min_fg_brightness: int = 50,
+    target_bg: tuple[int, int, int] = (255, 255, 255),
+) -> None:
+    """Convert animated GIF to dark-background version with smooth alpha matting.
+
+    Uses per-pixel coverage estimation (soft matte) to smoothly recomposite
+    foreground over the new dark background, fixing anti-aliasing halos.
+    Near-black foreground pixels are boosted to remain visible against dark bg.
+    """
+    gif = Image.open(src)
+    loop = gif.info.get("loop", 0)
+    frames: list[Image.Image] = []
+    durations: list[int] = []
+
+    D = np.array(bg_color, dtype=np.float32)
+    W = np.array(target_bg, dtype=np.float32)
+    diff = D - W  # channel-wise shift when coverage=1
+
+    try:
+        while True:
+            frame_rgba = gif.convert("RGBA")
+            data = np.array(frame_rgba, dtype=np.float32)  # H×W×4
+
+            P = data[:, :, :3]
+
+            # coverage ∈ [0,1]: fraction of white background in each pixel
+            # min(R/W_r, G/W_g, B/W_b) → 1 for pure white, 0 for fully dark foreground
+            coverage = np.clip(np.min(P / np.maximum(W, 1.0), axis=2), 0.0, 1.0)
+
+            # Recomposite: P_new = P + (D - W) * coverage
+            new_rgb = np.clip(P + coverage[:, :, np.newaxis] * diff, 0.0, 255.0)
+
+            # Boost near-black foreground pixels so they stay visible on the dark bg
+            if min_fg_brightness > 0:
+                max_ch = np.max(new_rgb, axis=2)
+                fg_mask = (coverage < 0.95) & (max_ch < min_fg_brightness)
+                safe_max = np.where(max_ch > 0, max_ch, 1.0)
+                boost = np.where(fg_mask, min_fg_brightness / safe_max, 1.0)
+                new_rgb = np.clip(new_rgb * boost[:, :, np.newaxis], 0.0, 255.0)
+
+            result = np.concatenate([new_rgb, data[:, :, 3:4]], axis=2).astype(np.uint8)
+            frame_out = Image.fromarray(result, "RGBA").quantize(colors=256)
+            frames.append(frame_out)
+            durations.append(gif.info.get("duration", 50))
+
+            gif.seek(gif.tell() + 1)
+    except EOFError:
+        pass
+
+    frames[0].save(
+        out,
+        save_all=True,
+        append_images=frames[1:],
+        loop=loop,
+        duration=durations,
+        optimize=False,
+    )
+    print(f"Saved dark GIF ({len(frames)} frames) → {out}")
 
 
 # ---------------------------------------------------------------------------
@@ -280,6 +349,7 @@ def dispatch(command: str, src: str, **kwargs) -> None:
         "invert_bg": invert_bg,
         "set_bg": set_bg,
         "make_transparent": make_transparent,
+        "darken_gif": darken_gif,
         "resize": resize,
         "change_ratio": change_ratio,
         "to_svg": to_svg,
@@ -352,6 +422,16 @@ def main() -> None:
     p.add_argument("--pad-color", type=_parse_color, default=(0, 0, 0), metavar="R,G,B")
     p.add_argument("--out", required=True)
 
+    # darken-gif
+    p = sub.add_parser("darken-gif", help="Replace near-white bg with dark color in animated GIF")
+    p.add_argument("file")
+    p.add_argument("--bg", type=_parse_color, default=(8, 16, 16), metavar="R,G,B",
+                   help="Dark background color (default: 8,16,16 = vis_style bg-base)")
+    p.add_argument("--target-bg", type=_parse_color, default=(255, 255, 255), metavar="R,G,B")
+    p.add_argument("--min-fg", type=int, default=50, dest="min_fg_brightness",
+                   help="Minimum brightness for foreground pixels to ensure contrast (default: 50)")
+    p.add_argument("--out", required=True)
+
     # to-svg
     p = sub.add_parser("to-svg", help="Convert PNG to SVG")
     p.add_argument("file")
@@ -382,6 +462,9 @@ def main() -> None:
         set_bg(args.file, args.out, color=args.color, threshold=args.threshold, target_bg=args.target_bg)
     elif args.command == "make-transparent":
         make_transparent(args.file, args.out, bg_color=args.bg, tolerance=args.tolerance)
+    elif args.command == "darken-gif":
+        darken_gif(args.file, args.out, bg_color=args.bg,
+                   min_fg_brightness=args.min_fg_brightness, target_bg=args.target_bg)
     elif args.command == "resize":
         resize(args.file, args.out, width=args.width, height=args.height, scale=args.scale)
     elif args.command == "change-ratio":

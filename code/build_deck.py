@@ -529,7 +529,7 @@ def slide_07():
         card(sl, 4, my, 40, mh, title=t, body=b, stripe=ACC_DATA_BLUE,
              title_size=T_H2 - 2, body_size=T_BODY_SM)
         my += mh + gap
-    fig_embed(sl, 48, 33, 48, 53, "paper_fig04_AAR_setup_overview.png",
+    fig_embed(sl, 48, 33, 48, 53, "paper_fig04_AAR_setup_overview_v2.png",
               caption="Figure 4 — AAR 架構：Dashboard → Sandbox → Forum → 評分 API。")
     footer(sl, 7)
     set_notes(sl, """【Slide 07｜什麼是 AAR？】幕別：第二幕 女王的觸碰　主導：B 技術精準
@@ -554,7 +554,7 @@ def slide_08():
 def slide_09():
     sl = add_slide(BG_BASE)
     h1(sl, "Deploying a parallel alignment research formation.")
-    fig_embed(sl, 4, 25, 64, 58, "paper_fig04_AAR_setup_overview.png",
+    fig_embed(sl, 4, 25, 64, 58, "paper_fig04_AAR_setup_overview_v2.png",
               caption="Figure 4 — 9 個 AAR 各自獨立 sandbox，結果寫入持久化 Forum。")
     stats = [("COMPUTE ENGINE", "Claude Opus 4.6"),
              ("SCALE", "9 Parallel instances"),
