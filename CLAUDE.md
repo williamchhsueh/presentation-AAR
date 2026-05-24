@@ -14,7 +14,7 @@
 論文全文已提取至 `paper/論文.md`（另有標注版 `paper/論文_highlighted.md`）。
 
 ## 時間預算
-約在30分鐘，21頁（五幕劇本）
+約在30分鐘，31頁（五幕劇本）
 
 ## 檔案位置
 根據不同機器，可能有以下路徑：
@@ -27,8 +27,11 @@
 ```
 presentation-AAR/
 ├── CLAUDE.md               # 本檔（專案說明 + 巨人對照表）
-├── PLAN_v2.md              # 敘事 / 內容 / 節奏 的權威（21 張、五幕劇本）
+├── PLAN_v4.1.md            # 敘事 / 31 張投影片對照表 / 速講稿 的權威（鏡像現行 deck）
+├── slides.yaml             # 每張投影片 metadata + 三層 speaker notes + 金句文字
 ├── vis_style.md            # 視覺 / 版型 / 色彩 / 動畫 的權威
+├── appendix.md             # 散會後留給 DS 的技術附錄（A1–A25）
+├── LAYOUT_FIXES.md         # python-pptx 版面 bug 記錄：座標參照、三個已修復問題與原因
 ├── AoT_wiki.md             # 進擊的巨人角色 / 情節速查
 ├── figure_report.md        # 各論文圖的說明與使用建議
 ├── pyproject.toml          # Poetry 專案設定
@@ -38,10 +41,13 @@ presentation-AAR/
 │   ├── aot_asset_01_armin_airship_night.png
 │   └── aot_asset_02_colossal_titan_attack.png
 ├── code/
-│   ├── build_deck.py       # 主建構腳本（當前使用）
-│   ├── create_v2_1.py      # 舊版 python-pptx 生成腳本
+│   ├── build_deck.py       # 主建構腳本（當前使用，讀取 slides.yaml）
+│   ├── build_appendix.py   # 技術附錄建構腳本（生成 AAR_Appendix_v1.pptx，34 張）
+│   ├── patch_slides.py     # 以 python-pptx 重建 v4.2 中四張 raster 投影片
+│   ├── gen_fig04.py        # fig04 生成腳本
 │   ├── figure_tools.py     # 圖片處理工具函式
 │   ├── render_slides.py    # 投影片預覽 / 匯出工具
+│   ├── create_v2_1.py      # （已棄用 / 歷史）
 │   └── image_formats.md    # 圖片格式選用說明
 ├── figure/                 # 論文原圖（paper_fig01–fig10）
 │   │                       # 每張圖有三種格式：
@@ -49,9 +55,11 @@ presentation-AAR/
 │   ├── paper_fig01_PGR_vs_hillclimbing_hours.{png,svg,_dark.png}
 │   ├── paper_fig02_PGR_schematic.{png,svg,_dark.png}
 │   ├── paper_fig03_human_baselines.{png,svg,_dark.png}
-│   ├── paper_fig04_AAR_setup_overview.{png,svg,_dark.png}
+│   ├── paper_fig04_AAR_setup_overview.{png,svg,_dark.png}   # 另有 _v2.png / _v3.png 為迭代版
 │   ├── paper_fig05_PGR_seeded_directions.{png,svg,_dark.png}
 │   ├── paper_fig06_swarm_orbit_animation.gif   # 動畫（無 SVG/dark 版）
+│   │                       #   另有 _dark.gif（canonical，被 build_deck.py 讀取）以及
+│   │                       #   _dark_v1 / _v2 / _v3 + " copy" 等多份迭代工作檔
 │   ├── paper_fig07_category_entropy.{png,svg,_dark.png}
 │   ├── paper_fig08_code_complexity.{png,svg,_dark.png}
 │   ├── paper_fig09_AAR_ideas_transfer.{png,svg,_dark.png}
@@ -60,21 +68,21 @@ presentation-AAR/
 │   ├── 論文.md
 │   └── 論文_highlighted.md
 └── ppt/
-    ├── AAR_Paper_Sharing_v4.pptx    # 當前主稿（21 張，10"×5.625"）
-    ├── AAR_Paper_Sharing_v2.1.pptx  # 舊版
-    ├── AAR_Paper_Sharing_v2.pptx    # 舊版
-    ├── AAR_Paper_Sharing_v1.pptx    # 舊版
+    ├── AAR_Paper_Sharing_v4.2.pptx  # **當前主稿**（31 張，10"×5.625"；v4.1 + raster slides 重建）
+    ├── AAR_Paper_Sharing_v4.1.pptx  # v4.1 主稿備份，PLAN_v4.1.md 鏡像對象
+    ├── AAR_Paper_Sharing_v[1-3]*.pptx  # 舊版 v1 / v2 / v2_rev / v3（歷史保留）
     ├── Superalignment_Dossier.pdf   # 視覺風格參照（dossier 風格原稿）
-    ├── Superalignment_Dossier.pptx  # 同上（可編輯版）
     └── The_Automated_Researcher.pptx
 ```
 
-### 兩份設計文件的分工
+### 三份設計文件的分工
 | 文件 | 職責 |
 |---|---|
-| `PLAN_v2.md` | 敘事內容、每幕節奏、三層內容系統、speaker notes 邏輯 |
+| `PLAN_v4.1.md` | 敘事結構、五幕節奏、31 張投影片對照表、章節卡 / 金句卡編號 |
+| `slides.yaml` | 每張投影片的 metadata、三層 speaker notes（Core / Deeper-DS / Wider-PM）、金句文字 |
 | `vis_style.md` | 版型 (Layout)、色彩 token、元件、動畫、python-pptx helper 對應 |
-兩檔衝突時：內容 → PLAN_v2 為準；形式 → vis_style.md 為準。
+
+三檔衝突時：敘事結構 → `PLAN_v4.1.md`；逐張內容 / speaker notes → `slides.yaml`；版型與形式 → `vis_style.md`。
 
 ## 聽眾分析
 - Data Scientists × 15（熟悉 ML 概念，可接受技術細節）
@@ -133,14 +141,15 @@ presentation-AAR/
 
 ---
 
-## 簡報敘事節奏（20 頁 / 30 分鐘參考結構）
-| 區段 | 頁數 | 時間 | 作用 |
-|---|---|---|---|
-| 開場鉤子（巨人登場）| 1–2 頁 | 2 min | 建立危機感，提出核心問題 |
-| 現況分析（牆的存在）| 3–5 頁 | 5 min | 說明現有方法的瓶頸 |
-| 論文方法（立體機動）| 6–12 頁 | 12 min | 核心技術貢獻，三聽眾並行 |
-| 實驗結果（覺醒）| 13–16 頁 | 5 min | 數據說話，視覺化優先 |
-| 啟示與應用（自由）| 17–19 頁 | 4 min | 對我們的意義、可能的後續 |
-| 金句收尾 | 20 頁 | 2 min | 一句話讓人帶回家 |
+## 簡報敘事節奏（31 頁 / 30 分鐘 — 五幕概覽）
+| 幕 | 投影片 | 時間 |
+|---|---|---|
+| I 超大型巨人 | 01–05 | 5 min |
+| II 女王的觸碰 | 06–09 | 6 min |
+| III 兵團展開 | 10–16 | 8 min |
+| IV 艾連覺醒（三重翻牌）| 17–24 | 6 min |
+| V 阿爾敏 | 25–31 | 5 min |
+
+逐張節奏、章節卡（slides 2 / 6 / 10 / 17 / 25）、金句卡編號（5 / 9 / 16 / 24 / 31）以 `PLAN_v4.1.md` §「31 張投影片對照表」為準。
 
 每節開頭請先給出「這節的巨人情節對應場景」，幫助使用者確認敘事一致性。

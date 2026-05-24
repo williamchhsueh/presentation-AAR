@@ -181,6 +181,80 @@ def darken_gif(
     print(f"Saved dark GIF ({len(frames)} frames) → {out}")
 
 
+def darken_gif_v2(
+    src: str | Path,
+    out: str | Path,
+    bg_color: tuple[int, int, int] = (8, 16, 16),
+    bg_threshold: int = 200,
+    min_fg_brightness: int = 80,
+    target_bg: tuple[int, int, int] = (255, 255, 255),
+) -> None:
+    """Convert animated GIF to dark background, preserving light-colored foreground.
+
+    Fixes the issue where light-colored text/labels become nearly invisible:
+    Only pixels with min_channel >= bg_threshold are treated as (partial) background.
+    Pixels below that threshold are pure foreground and keep their original color.
+
+    Args:
+        bg_threshold: minimum channel value to start treating pixel as background.
+                      Pixels with min_channel < bg_threshold → coverage=0 (pure fg).
+                      Default 200 preserves light-colored text (e.g. salmon, light gray).
+        min_fg_brightness: floor brightness for foreground pixels on the dark bg.
+    """
+    gif = Image.open(src)
+    loop = gif.info.get("loop", 0)
+    frames: list[Image.Image] = []
+    durations: list[int] = []
+
+    D = np.array(bg_color, dtype=np.float32)
+    W = np.array(target_bg, dtype=np.float32)
+    diff = D - W
+
+    bg_range = 255.0 - bg_threshold  # denominator for coverage formula
+
+    try:
+        while True:
+            frame_rgba = gif.convert("RGBA")
+            data = np.array(frame_rgba, dtype=np.float32)
+
+            P = data[:, :, :3]
+
+            # Only pixels with min_channel >= bg_threshold get darkened.
+            # coverage = (min_channel - bg_threshold) / (255 - bg_threshold), clipped [0, 1].
+            # Pixels with min_channel < bg_threshold → coverage=0 → unchanged.
+            min_ch = np.min(P, axis=2)
+            coverage = np.clip((min_ch - bg_threshold) / bg_range, 0.0, 1.0)
+
+            new_rgb = np.clip(P + coverage[:, :, np.newaxis] * diff, 0.0, 255.0)
+
+            # Boost near-black foreground pixels so they stay visible
+            if min_fg_brightness > 0:
+                max_ch = np.max(new_rgb, axis=2)
+                fg_mask = (coverage < 0.95) & (max_ch < min_fg_brightness)
+                safe_max = np.where(max_ch > 0, max_ch, 1.0)
+                boost = np.where(fg_mask, min_fg_brightness / safe_max, 1.0)
+                new_rgb = np.clip(new_rgb * boost[:, :, np.newaxis], 0.0, 255.0)
+
+            result = np.concatenate([new_rgb, data[:, :, 3:4]], axis=2).astype(np.uint8)
+            frame_out = Image.fromarray(result, "RGBA").quantize(colors=256)
+            frames.append(frame_out)
+            durations.append(gif.info.get("duration", 50))
+
+            gif.seek(gif.tell() + 1)
+    except EOFError:
+        pass
+
+    frames[0].save(
+        out,
+        save_all=True,
+        append_images=frames[1:],
+        loop=loop,
+        duration=durations,
+        optimize=False,
+    )
+    print(f"Saved dark GIF v2 ({len(frames)} frames) → {out}")
+
+
 # ---------------------------------------------------------------------------
 # Resize / ratio
 # ---------------------------------------------------------------------------
@@ -350,6 +424,7 @@ def dispatch(command: str, src: str, **kwargs) -> None:
         "set_bg": set_bg,
         "make_transparent": make_transparent,
         "darken_gif": darken_gif,
+        "darken_gif_v2": darken_gif_v2,
         "resize": resize,
         "change_ratio": change_ratio,
         "to_svg": to_svg,
@@ -432,6 +507,17 @@ def main() -> None:
                    help="Minimum brightness for foreground pixels to ensure contrast (default: 50)")
     p.add_argument("--out", required=True)
 
+    # darken-gif-v2
+    p = sub.add_parser("darken-gif-v2",
+                       help="Dark-bg GIF conversion that preserves light-colored foreground")
+    p.add_argument("file")
+    p.add_argument("--bg", type=_parse_color, default=(8, 16, 16), metavar="R,G,B")
+    p.add_argument("--bg-threshold", type=int, default=200, dest="bg_threshold",
+                   help="min_channel floor for background coverage (default: 200)")
+    p.add_argument("--min-fg", type=int, default=80, dest="min_fg_brightness",
+                   help="Minimum brightness for dark foreground pixels (default: 80)")
+    p.add_argument("--out", required=True)
+
     # to-svg
     p = sub.add_parser("to-svg", help="Convert PNG to SVG")
     p.add_argument("file")
@@ -465,6 +551,10 @@ def main() -> None:
     elif args.command == "darken-gif":
         darken_gif(args.file, args.out, bg_color=args.bg,
                    min_fg_brightness=args.min_fg_brightness, target_bg=args.target_bg)
+    elif args.command == "darken-gif-v2":
+        darken_gif_v2(args.file, args.out, bg_color=args.bg,
+                      bg_threshold=args.bg_threshold,
+                      min_fg_brightness=args.min_fg_brightness)
     elif args.command == "resize":
         resize(args.file, args.out, width=args.width, height=args.height, scale=args.scale)
     elif args.command == "change-ratio":
