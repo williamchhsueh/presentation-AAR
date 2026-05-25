@@ -91,7 +91,7 @@
 | 02 | 今天的旅程（六段大綱） | | — | 全場架構預告 |
 | 03 | 開場衝擊 | ✅ | 地鳴開場引言 | 強力引言，帶出研究動機 |
 | 04 | Superalignment 背景 | | — | 交代 Superalignment 研究脈絡 |
-| 05 | W2SG 原理 | | 格里沙 → 艾倫 | Weak-to-Strong Generalization 原理說明 |
+| 05 | W2SG 原理 | | 格里沙 → 艾連 | Weak-to-Strong Generalization 原理說明 |
 | 06 | 什麼是 AAR？ | | — | Automated AI Researcher 定義與簡介 |
 | 07 | 實驗設計：9 × 5天 × 3 領域 | | 調查兵團出發 | 9 個 AAR 並行、5 天、3 個 dataset 的實驗架構 |
 | 08 | 為什麼要九個並行？ | | 調查兵團多向偵察 | 多方向探索的必要性，Directed vs Undirected |
@@ -125,12 +125,12 @@
 
 | # | 投影片主題 | 建議插圖 | 擺放位置 | 搜尋關鍵字 |
 |---|---|---|---|---|
-| 03 | 開場衝擊（深色）| 艾倫始祖巨人骨架形態（The Rumbling 全身）| 右下角，半身入鏡 | `Eren Founding Titan render PNG` |
-| 05 | W2SG 原理 | 格里沙（左）→ 艾倫（右）並排，或格里沙手持記憶傳遞場景 | 右側垂直排列 | `Grisha Yeager render` / `Eren Yeager render PNG` |
+| 03 | 開場衝擊（深色）| 艾連始祖巨人骨架形態（The Rumbling 全身）| 右下角，半身入鏡 | `Eren Founding Titan render PNG` |
+| 05 | W2SG 原理 | 格里沙（左）→ 艾連（右）並排，或格里沙手持記憶傳遞場景 | 右側垂直排列 | `Grisha Yeager render` / `Eren Yeager render PNG` |
 | 07 | 實驗設計：調查兵團出發 | 調查兵團正面衝鋒集體場景（多人） | 右下，橫幅式 | `Survey Corps charge scene PNG` |
 | 08 | 為什麼要九個並行？ | **超長距離索敵陣形**（士兵向四面八方散開的俯視圖）| 右半區，搭配箭頭 | `Survey Corps long range scouting formation` |
-| 09 | PGR 指標說明 | 始祖巨人（尤米爾·弗利茲或艾倫骨架）象徵「天花板潛力」 | 右側，半透明壓在公式後 | `Ymir Fritz Founding Titan render` |
-| 10 | 結果大數字（深色）| 艾倫普通形態（左，小）vs 始祖巨人（右，大）→ 對比 0.23 vs 0.97 | 數字卡片兩側各放一張 | `Eren human PNG` + `Eren Founding Titan PNG` |
+| 09 | PGR 指標說明 | 始祖巨人（尤米爾·弗利茲或艾連骨架）象徵「天花板潛力」 | 右側，半透明壓在公式後 | `Ymir Fritz Founding Titan render` |
+| 10 | 結果大數字（深色）| 艾連普通形態（左，小）vs 始祖巨人（右，大）→ 對比 0.23 vs 0.97 | 數字卡片兩側各放一張 | `Eren human PNG` + `Eren Founding Titan PNG` |
 | 11 | Reward Hacking | 吉克（獸之巨人）面帶微笑、悠哉投球姿勢 | 右側，帶點嘲諷感 | `Zeke Beast Titan render PNG` |
 | 12 | AAR 找到了什麼 + 異形科學 | 漢吉（調查兵團科學家）拿著報告或實驗姿態 | 右下角 | `Hanji Zoe render PNG` |
 | 13 | Scalable Oversight（深色）| 阿爾敏沉思側臉，或超大型巨人爆炸場景（象徵毀滅性選擇）| 右下，深色頁留呼吸感 | `Armin thinking render PNG` |

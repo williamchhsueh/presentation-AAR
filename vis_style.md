@@ -1,8 +1,8 @@
 # AAR 簡報視覺風格導引 `vis_style.md`
 
-> **參照原稿**：`ppt/Superalignment_Dossier.pdf`（14 頁，NotebookLM dossier 風格）  
-> **敘事權威**：`PLAN_v2.md`（21 張投影片、五幕劇本）  
-> **本檔目的**：把 dossier 的視覺語言抽象成 token + 元件 + 版型，並逐頁套用到 PLAN_v2 的 21 張，讓任何 coding agent（python-pptx、HTML→PNG、Reveal.js、Keynote 手刻皆可）都能產生風格一致的成品。  
+> **參照原稿**：`ppt/Superalignment_Dossier.pdf`（14 頁，NotebookLM dossier 風格）
+> **敘事權威**：`PLAN_v2.md`（21 張投影片、五幕劇本）
+> **本檔目的**：把 dossier 的視覺語言抽象成 token + 元件 + 版型，並逐頁套用到 PLAN_v2 的 21 張，讓任何 coding agent（python-pptx、HTML→PNG、Reveal.js、Keynote 手刻皆可）都能產生風格一致的成品。
 > **本檔規範**：中文敘事為主；色碼、token 名、font-family、zone 名、layout 名一律英文，**請勿翻譯**。
 
 ---
@@ -42,7 +42,7 @@
 
 ## 4. Color Tokens
 
-> 全簡報只用以下 token；禁止寫死的 `#xxxxxx` 出現在元件之外。  
+> 全簡報只用以下 token；禁止寫死的 `#xxxxxx` 出現在元件之外。
 > 命名規則：`bg-*` 背景、`panel-*` 面板、`text-*` 文字、`accent-*` 色彩 highlight、`stroke-*` 線、`accent-role-*` 角色徽章
 
 ### 4.1 背景與面板
@@ -210,7 +210,7 @@
 
 ### 6.5 `c-footer`（頁腳）
 
-- 左下小字（`t-caption`, `text-muted`，可選）：  
+- 左下小字（`t-caption`, `text-muted`，可選）：
   `Automated Alignment Researcher (AAR) · Anthropic Research 2026`
 - 右下小字（`t-caption`, `text-muted`）：頁碼 `04 / 21`
 - 金句卡（Slide 04/08/12/16/21）與 Slide 01（冷開場）**不顯示頁碼**
@@ -458,7 +458,7 @@ PGR
 
 ## 11. 21 張投影片視覺描述
 
-> 每張卡片格式：  
+> 每張卡片格式：
 > `Layout` / `Background` / `Wall stage` / `Footer mode` / `Zones` / `Accent tokens` / `Image assets`
 
 ---
@@ -701,7 +701,7 @@ PGR
   - `Expectation:` 一行
   - `Exploitation:` 一段
 - **Accent tokens**：四 hack 卡頂條 `accent-bad`；卡底色 `panel-bad`
-- **Image assets**：可選右下角 AoT「艾倫啟動地鳴瞬間」剪影（30% 透明）
+- **Image assets**：可選右下角 AoT「艾連啟動地鳴瞬間」剪影（30% 透明）
 - **Transition**：講完即按下一頁，**0 秒過渡**
 
 #### Slide 15｜第三翻：證據
@@ -860,8 +860,8 @@ PGR
 | 調查兵團集體衝鋒 | 09 | 右下角角落剪影（可選） |
 | 超長距離索敵陣形俯視 | 10 | 右半區 30% 半透明 overlay |
 | 始祖巨人（尤米爾·弗利茲） | 11 | 右側 30% 半透明壓在公式後 |
-| 艾倫普通 vs 始祖巨人 | 13 | 角落小圖（可選） |
-| 艾倫啟動地鳴瞬間 | 14 | 右下角剪影 |
+| 艾連普通 vs 始祖巨人 | 13 | 角落小圖（可選） |
+| 艾連啟動地鳴瞬間 | 14 | 右下角剪影 |
 | 漢吉拿報告困惑 | 15 | 右下角剪影 |
 | 阿爾敏沉思 + 立體機動命中後頸 | ~~17~~ | 已移除（Slide 17 改為純資料頁，L-DOSSIER + fig10） |
 | 飛行船船頭阿爾敏背影（`aot_asset_01_armin_airship_night.png`） | 20 | 全頁 hero 背景，`c-hero-mask` 45–50% |

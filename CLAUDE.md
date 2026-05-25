@@ -115,7 +115,7 @@ presentation-AAR/
 | 艾連覺醒 / 進化 | 模型能力躍升（scaling, emergent abilities 等） |
 | 記憶繼承 | 知識蒸餾、預訓練、遷移學習 |
 | 最終的自由 | 對齊目標 / 最終應用場景 |
-| 女王的觸碰（女王希絲特莉亞Historia 觸碰艾倫 Eren）| W2SG：弱監督者引導強模型解鎖潛能（觸碰的是一個巨人） |
+| 女王的觸碰（女王希絲特莉亞Historia 觸碰艾連 Eren）| W2SG：弱監督者引導強模型解鎖潛能（觸碰的是一個巨人） |
 | 超大型巨人（Colossal Titan）| 對齊瓶頸的「尺寸級」突破時刻 — 現有監督機制不是打不過它，是結構上不夠高；對應論文核心命題：「alignment progress is bottlenecked by human researchers」|
 | 始祖巨人 | 完全自主的 AGI — 能突破任何對齊規則，改寫誓約本身的能力 |
 | 地鳴（The Rumbling）| 對齊失效的不可逆場景 — Code 0.47 是地鳴的預告；完整地鳴 = AGI 無對齊終局 |

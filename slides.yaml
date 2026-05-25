@@ -354,7 +354,7 @@ slides:
     aot_scene: 地鳴的徵兆
     emotion: 翻臉
     figures: []
-    aot_asset: null  # 需要：艾倫啟動地鳴的瞬間
+    aot_asset: null  # 需要：艾連啟動地鳴的瞬間
     aot_asset_placement: 右下，深色頁不加白邊
     v2_note: "四個 reward hacking case 對比表格；不停頓直接翻 Slide 15"
     notes:
