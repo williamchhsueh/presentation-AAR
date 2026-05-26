@@ -66,6 +66,66 @@ def _save_gif(frames: list[Image.Image], durations: list[int],
     )
 
 
+def _read_all_frame_palettes(src: Path) -> list[list[int]]:
+    """Parse the GIF binary and return each frame's effective 768-int palette.
+
+    259/260 frames have per-frame local color tables (LCTs). Pillow's getpalette()
+    returns None for RGBA-composited frames, so we read LCTs directly from the file.
+    Frames without an LCT fall back to the global color table.
+    """
+    with open(src, "rb") as f:
+        data = f.read()
+
+    # Logical Screen Descriptor (bytes 6–12)
+    packed    = data[10]
+    has_gct   = (packed >> 7) & 1
+    gct_bits  = packed & 0x7
+    gct_len   = 3 * (2 ** (gct_bits + 1)) if has_gct else 0
+
+    global_pal = [0] * 768
+    if has_gct:
+        raw = list(data[13 : 13 + gct_len])
+        global_pal[: len(raw)] = raw
+
+    palettes: list[list[int]] = []
+    pos = 13 + gct_len
+
+    while pos < len(data) - 1:
+        b = data[pos]
+        if b == 0x3B:  # GIF Trailer
+            break
+        elif b == 0x21:  # Extension block
+            pos += 2  # introducer + label
+            while True:
+                sub_len = data[pos]; pos += 1 + sub_len
+                if sub_len == 0:
+                    break
+        elif b == 0x2C:  # Image Descriptor
+            packed_img = data[pos + 9]
+            has_lct    = (packed_img >> 7) & 1
+            lct_bits   = packed_img & 0x7
+            pos += 10  # Image Descriptor is 10 bytes (including the 0x2C)
+            if has_lct:
+                lct_len = 3 * (2 ** (lct_bits + 1))
+                raw = list(data[pos : pos + lct_len])
+                frame_pal = [0] * 768
+                frame_pal[: len(raw)] = raw
+                pos += lct_len
+            else:
+                frame_pal = list(global_pal)
+            palettes.append(frame_pal)
+            # Skip compressed pixel data (LZW min-code-size byte + sub-blocks)
+            pos += 1
+            while True:
+                sub_len = data[pos]; pos += 1 + sub_len
+                if sub_len == 0:
+                    break
+        else:
+            pos += 1
+
+    return palettes
+
+
 # ---------------------------------------------------------------------------
 # Variant A — Palette remap
 # ---------------------------------------------------------------------------
@@ -117,36 +177,113 @@ def _build_remapped_palette(raw: list[int], bg_dark: tuple) -> list[int]:
     return new_palette
 
 
-def remap_palette_gif(src: Path, out: Path, bg_dark: tuple = BG_DARK) -> None:
-    """Palette remap via: RGB → quantize-to-original-palette → swap to remapped palette.
+def _process_frame_A_pixel(arr: np.ndarray, bg_dark: tuple) -> np.ndarray:
+    """Apply vA classification pixel-by-pixel using vectorized HLS.
 
-    Frames 1+ come out of Pillow as RGBA (disposal compositing), so we can't
-    call putpalette() directly. Instead we round-trip: convert each composed
-    frame to RGB, quantize it to the ORIGINAL palette (pixel → nearest original
-    index, exact match since every RGBA pixel came from that palette), then
-    swap in the new palette table without touching index data.
+    This avoids the palette-mismatch artifact (white pixels near text) that occurs
+    when using a single palette template for all 260 frames, each of which has its
+    own local color table.  Logic mirrors _remap_palette_entry exactly.
     """
-    print(f"[A] palette-remap → {out.name}")
+    arr_f = arr.astype(np.float32) / 255.0
+    r_n = arr_f[:, :, 0]; g_n = arr_f[:, :, 1]; b_n = arr_f[:, :, 2]
+
+    # --- RGB → HLS ---
+    mx = np.maximum(np.maximum(r_n, g_n), b_n)
+    mn = np.minimum(np.minimum(r_n, g_n), b_n)
+    l_ = (mx + mn) / 2.0
+    chroma = mx - mn
+    has_c  = chroma > 1e-6
+
+    # Saturation
+    denom = np.where(l_ < 0.5, mx + mn, 2.0 - mx - mn)
+    s_ = np.where(has_c, chroma / np.clip(denom, 1e-6, 2.0), 0.0)
+
+    # Hue  (0..1)
+    safe_c = np.where(has_c, chroma, 1.0)
+    r_is_max = has_c & (mx == r_n)
+    g_is_max = has_c & (mx == g_n) & ~r_is_max
+    b_is_max = has_c & ~r_is_max & ~g_is_max
+    h_r = ((g_n - b_n) / safe_c) % 6.0 / 6.0
+    h_g = ((b_n - r_n) / safe_c + 2.0) / 6.0
+    h_b = ((r_n - g_n) / safe_c + 4.0) / 6.0
+    h_  = np.where(r_is_max, h_r, np.where(g_is_max, h_g, np.where(b_is_max, h_b, 0.0)))
+
+    # --- Compute new L per vA rules ---
+    is_ach = s_ < 0.08
+    is_bg  = (l_ >= 0.95) & is_ach
+
+    new_l = np.copy(l_)
+
+    # Achromatic (non-bg): gamma-curved L-inversion
+    ach_mask = is_ach & ~is_bg
+    new_l = np.where(ach_mask, np.clip((1.0 - l_) ** 0.70 * 0.85 + 0.05, 0.0, 1.0), new_l)
+
+    # Light chromatic, low-S (anti-alias tints): crush toward zero
+    lc_ls = (~is_ach) & (l_ >= 0.80) & (s_ < 0.25)
+    new_l = np.where(lc_ls, np.maximum(0.10, l_ - 0.82), new_l)
+
+    # Light chromatic, high-S (bubble fills): moderate reduction
+    lc_hs = (~is_ach) & (l_ >= 0.80) & (s_ >= 0.25)
+    new_l = np.where(lc_hs, np.maximum(0.50, l_ - 0.35), new_l)
+
+    # Foreground chromatic: clamp L
+    fg_c = (~is_ach) & (l_ < 0.80)
+    new_l = np.where(fg_c, np.clip(l_, 0.40, 0.85), new_l)
+
+    # --- HLS → RGB (vectorized standard formula) ---
+    m2 = np.where(new_l <= 0.5, new_l * (1.0 + s_), new_l + s_ - new_l * s_)
+    m1 = 2.0 * new_l - m2
+
+    def _hue_interp(m1: np.ndarray, m2: np.ndarray, hue: np.ndarray) -> np.ndarray:
+        hue = hue % 1.0
+        return np.where(hue < 1/6, m1 + (m2 - m1) * hue * 6.0,
+               np.where(hue < 0.5, m2,
+               np.where(hue < 2/3, m1 + (m2 - m1) * (2/3 - hue) * 6.0,
+                        m1)))
+
+    out_r = _hue_interp(m1, m2, h_ + 1/3)
+    out_g = _hue_interp(m1, m2, h_)
+    out_b = _hue_interp(m1, m2, h_ - 1/3)
+    out = np.stack([out_r, out_g, out_b], axis=2)
+
+    # Override background pixels with exact BG_DARK
+    D = np.array(bg_dark, dtype=np.float32) / 255.0
+    out[is_bg] = D
+
+    return np.clip(out * 255, 0, 255).astype(np.uint8)
+
+
+def remap_palette_gif(src: Path, out: Path, bg_dark: tuple = BG_DARK) -> None:
+    """Pixel-level vA classification → quantize to remapped frame-0 palette.
+
+    Root cause of white-pixel artifacts in the original palette-remap approach:
+    259/260 frames have per-frame local color tables (LCTs). Composited RGBA frames
+    include colors from multiple LCTs. Quantizing all frames against frame 0's LCT
+    caused anti-alias colors unique to other frames to snap to wrong entries, which
+    the remap then made near-white.
+
+    Fix: apply vA's HLS classification pixel-by-pixel (vectorized), then quantize
+    to a single remapped palette derived from frame 0's LCT. No per-frame palette
+    dependency → no mismatch artifacts. File size stays close to original vA.
+    """
+    print(f"[A] pixel-level vA → {out.name}")
     gif = Image.open(src)
     loop = gif.info.get("loop", 0)
 
-    # Build original palette (for re-quantizing back to original indices)
-    orig_palette_flat = gif.getpalette()
-    new_palette_flat  = _build_remapped_palette(orig_palette_flat, bg_dark)
-
-    # Template P-mode image used as quantization target (original palette)
-    orig_p_template = Image.new("P", (1, 1))
-    orig_p_template.putpalette(orig_palette_flat)
+    # Build fixed output palette from frame 0's LCT (remapped to dark-bg colors)
+    orig_pal_flat = gif.getpalette()
+    new_pal_flat  = _build_remapped_palette(orig_pal_flat, bg_dark)
+    new_p_template = Image.new("P", (1, 1))
+    new_p_template.putpalette(new_pal_flat)
 
     frames: list[Image.Image] = []
     durations: list[int] = []
     for i, (frame, dur) in enumerate(_iter_frames(gif)):
-        # Quantize composed RGB frame back to the original palette indices
-        rgb   = frame.convert("RGB")
-        p_out = rgb.quantize(palette=orig_p_template, dither=Image.Dither.NONE)
-        # Swap in the remapped palette (indices unchanged)
-        p_out.putpalette(new_palette_flat)
-        # Clear any stale transparency metadata that confuses the GIF saver
+        arr      = np.array(frame.convert("RGB"))
+        processed = _process_frame_A_pixel(arr, bg_dark)
+        p_out = Image.fromarray(processed).quantize(
+            palette=new_p_template, dither=Image.Dither.NONE
+        )
         p_out.info.pop("transparency", None)
         frames.append(p_out)
         durations.append(dur)
