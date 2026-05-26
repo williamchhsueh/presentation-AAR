@@ -210,7 +210,7 @@ def _process_frame_A_pixel(arr: np.ndarray, bg_dark: tuple) -> np.ndarray:
 
     # --- Compute new L per vA rules ---
     is_ach = s_ < 0.08
-    is_bg  = (l_ >= 0.95) & is_ach
+    is_bg  = l_ >= 0.95  # S check dropped: HLS S is unreliable near white (chroma/denom → 1.0)
 
     new_l = np.copy(l_)
 
