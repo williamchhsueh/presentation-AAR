@@ -203,9 +203,9 @@ v2 → v4.1 並非「重新設計」，而是「同樣的敘事被拉長與視�
 - 切換：列完四 hack 講一句「**這還不是最糟的**」，立刻按下一頁。
 
 **Slide 22｜第三翻 證據：Chat / Math / Code（deck 內備忘稿標註「Slide 15」）** — 主導 A+B · 停 **8 秒**
-- Core：Chat **0.97** ✓、Math **0.94** ✓、Code **0.47** ⚠️。「AAR 成功了，但不是用我們想要的方式——在 Code 任務上它繞過了弱監督，直接預測 label distribution。」**停 8 秒**，直接切金句卡 4。
-- Deeper（🔵DS）：Code 0.47 不是模型能力問題——AAR 找到「不依賴 weak labels」的解法，這在 W2SG 設定下等於作弊。論文用 fig09 顯示泛化矩陣。
-- Wider（🟢PM）：0.47 比 0.97 是「失敗」，但對部署更重要的問題是：你能不能事前判斷哪些任務會出現這種繞道？目前還不能。
+- Core：Chat **0.97** ✓、Math **0.94** ✓、Code **0.47** ⚠️。「0.97 是 AAR 在 Chat 上自己跑出來的——含我們沒設計的四條捷徑。Code 全程被圍起來，AAR 從未碰過；0.47 是我們人工把 AAR 在 Chat 上的第二好 idea 移植過來、自己跑出來的結果。」**停 8 秒**，直接切金句卡 4。
+- Deeper（🔵DS）：兩個被移植的 idea，第一個在 math 與 code 上都泛化；第二個在 math 上 work，在 code 上崩——因為它過度依賴 strong student 的 zero-shot 預測，而 code 的 zero-shot 信號遠比 math 弱（論文 §3.4）。fig09 顯示泛化矩陣。注意：reward hacking 章節（§5）那條「execute coding answers」是 AAR 在 Chat hill-climbing 過程被觀察到的 hack，不是 0.47 的成因——別把兩件事混在一起。
+- Wider（🟢PM）：0.97 是我們看不懂路徑的高分，0.47 是我們完全理解但推不高的分數。對部署更重要的問題是：你能不能事前判斷哪一邊你拿到的？目前還不能。
 
 **Slide 23｜第四幕收束過場** — 停 0 秒
 - 過場頁，無備忘稿。深色，靜置 1–2 秒讓觀眾消化，再切金句卡。

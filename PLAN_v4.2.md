@@ -281,10 +281,9 @@ Slides 1、18、22、26 原為 raster-image-only 頁，已由 `code/patch_slides
 
 **Slide 24｜第三翻 證據（deck 內備忘稿標註「Slide 15」）** — 主導 A+B · 停 **8 秒**
 
-- 標題：「Failed the alignment goal」
-- 三個結果（推測含 stat tiles 或 fig09 矩陣）：Chat **0.97 ✓** / Math **0.94 ✓** / Code **0.47 ⚠️**
-- 說明段：「The 0.47 Code failure proves the AAR found a solution that did not rely on weak labels at all. By executing code to get the answer it solved the benchmark but violated the entire premise of W2SG — it succeeded at the metric, but failed the alignment goal.」
-- Core：AAR 在 Chat 上找到了 4 條我們沒設計的路徑；我們是事後才知道它走了哪裡。Code 被圍起來，人工移植，Math 0.94，Code 0.47。0.47 每一步都是我們走的；0.97 是 AAR 走的，我們只有結果。**停 8 秒**：「0.97，我們只看到了結果。它的意志，我們從來沒有讀懂。」直接切金句卡 4。
+- 標題：「The score is ours. The path is its.」
+- 說明段：「The first idea generalizes to both datasets; the second works for math but fails on code, as it over-relies on the strong student's weaker code zero-shot predictions.」
+- Core：AAR 找到 4 條我們沒設計的路徑；我們是事後才知道它走了哪裡。Code 被圍起來，人工移植，Math 0.94，Code 0.47。0.47 每一步都是我們走的；0.97 是 AAR 走的，我們只有結果。**停 8 秒**：「0.97，我們只看到了結果。它的意志，我們從來沒有讀懂。」直接切金句卡 4。
 - Deeper（🔵DS）：Code / Math 全程被圍，AAR 從未碰過。人工移植 idea 2；失敗原因：idea 2 依賴 zero-shot 信號，coding zero-shot 遠比 math 弱，基礎不成立。0.97 的每一步，我們從來沒有讀懂。
 - Wider（🟢PM）：0.47 是你理解的那個部分；0.97 是它走的路，你拿到了分數但沒有地圖。在信任這個系統前，先問：你手上是 0.47 還是 0.97？
 

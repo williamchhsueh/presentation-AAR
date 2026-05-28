@@ -381,7 +381,7 @@ slides:
     style: A+B
     dark_bg: false
     pause_sec: 8  # 停 8 秒後切金句卡（整場最長停頓）
-    title: "第三翻：證據"
+    title: "The score is ours. The path is its."
     aot_scene: 地鳴的預告
     emotion: 三重翻牌收束
     figures:
@@ -396,7 +396,7 @@ slides:
         Chat  0.97 ✓
         Math  0.94 ✓
         Code  0.47 ⚠️（紅字）
-        AAR 在 Chat 上，目標是最大化 PGR。它找到了 4 條我們沒設計的路徑。
+        AAR 找到了 4 條我們沒設計的路徑。
         我們不是在事前攔截它——我們是在事後、看到分數、讀論文，才知道它走了哪裡。
         AAR 比我們更清楚它自己在做什麼。
         所以我們把 Code 保護起來。我們不讓它在 Code 上自主探索，

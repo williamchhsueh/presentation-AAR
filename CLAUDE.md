@@ -44,6 +44,10 @@ presentation-AAR/
 │   ├── build_deck.py       # 主建構腳本（當前使用，讀取 slides.yaml）
 │   ├── build_appendix.py   # 技術附錄建構腳本（生成 AAR_Appendix_v1.pptx，34 張）
 │   ├── patch_slides.py     # 以 python-pptx 重建 v4.2 中四張 raster 投影片
+│   ├── sync_notes.py       # 將 slides.yaml speaker notes 同步寫入現有 .pptx（不動視覺）
+│   │                       #   用法：poetry run python code/sync_notes.py --map "yaml_id:pptx_idx,..." [--slides id,...] [--dry-run]
+│   │                       #   範例：poetry run python code/sync_notes.py --map "14:22,15:23" --slides 14,15
+│   │                       #   可在 slides.yaml entry 加 pptx_index: N 欄位取代 --map
 │   ├── gen_fig04.py        # fig04 生成腳本
 │   ├── figure_tools.py     # 圖片處理工具函式
 │   ├── render_slides.py    # 投影片預覽 / 匯出工具
